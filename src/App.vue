@@ -12,11 +12,19 @@
 		</div>
 		<ul>
 			<li v-for="movie,i in apiData.movie" :key="`movie_${i}`">
-				{{ `Titolo: ${movie[returnMovieOrSeriesKey('movie', 'title')]}, Titolo originale: ${movie[returnMovieOrSeriesKey('movie', 'original_title')]}, Lingua originale: ${movie[returnMovieOrSeriesKey('movie', 'original_language')]}, Voto: ${movie[returnMovieOrSeriesKey('movie', 'vote_average')]}` }}
+				<img :src="createPosterUrl(movie.poster_path)" :alt="`poster_${movie.title}`">
+				{{ `Titolo: ${movie[returnMovieOrSeriesKey('movie', 'title')]}, Titolo originale: ${movie[returnMovieOrSeriesKey('movie', 'original_title')]}, Lingua originale: ${movie[returnMovieOrSeriesKey('movie', 'original_language')]}, Voto: ${movie[returnMovieOrSeriesKey('movie', 'vote_average')]}/5` }}
+				<div>
+					<img v-for="star,k in returnStarsArray(movie.vote_average)" :key="k" :src="star" alt="rating">
+				</div>
 				<img :src="createFlagUrl(movie.flag)" :alt="`flag_${movie.flag}`">
 			</li>
 			<li v-for="tvShow,j in apiData.tv" :key="`tvShow_${j}`">
-				{{ `Titolo: ${tvShow[returnMovieOrSeriesKey('tv', 'title')]}, Titolo originale: ${tvShow[returnMovieOrSeriesKey('tv', 'original_title')]}, Lingua originale: ${tvShow[returnMovieOrSeriesKey('tv', 'original_language')]}, Voto: ${tvShow[returnMovieOrSeriesKey('tv', 'vote_average')]}` }}
+				<img :src="createPosterUrl(tvShow.poster_path)" :alt="`flag_${tvShow.name}`">
+				{{ `Titolo: ${tvShow[returnMovieOrSeriesKey('tv', 'title')]}, Titolo originale: ${tvShow[returnMovieOrSeriesKey('tv', 'original_title')]}, Lingua originale: ${tvShow[returnMovieOrSeriesKey('tv', 'original_language')]}, Voto: ${tvShow[returnMovieOrSeriesKey('tv', 'vote_average')]}/5` }}
+				<div>
+					<img v-for="star,n in returnStarsArray(tvShow.vote_average)" :key="n" :src="star" alt="rating">
+				</div>
 				<img :src="createFlagUrl(tvShow.flag)" :alt="`flag_${tvShow.flag}`">
 			</li>
 		</ul>
@@ -45,6 +53,14 @@ export default {
 			},
 			languageCodes: ['it', 'pt', 'es', 'en', 'ja', 'de', 'fr', 'sv', 'hr', 'ar'],
 			countryCodes: ['it', 'pt', 'es', 'us', 'jp', 'de', 'fr', 'sv', 'hr', 'ar'],
+			images: {
+				imageBaseUrl: 'https://image.tmdb.org/t/p/',
+				poster_sizes: ['w92', 'w154', 'w185', 'w342', 'w500', 'w780', 'original'],
+			},
+			starIcons: {
+				full: '@/assets/star-solid.png', //https://github.com/Frameck/vue-boolflix/blob/main/src/assets/star-solid.png
+				empty: '@/assets/star-regular.png' //https://github.com/Frameck/vue-boolflix/blob/main/src/assets/star-regular.png
+			},
 			searchedQuery: ''
 		}
 	},
@@ -81,6 +97,8 @@ export default {
 							
 							movie['flag'] = countryCode
 						}
+
+						movie['vote_average'] = movie['vote_average'] === 0 ? 0 : Math.ceil(movie['vote_average'] / 2)
 	
 						this.apiData[endpoint].push(movie)
 					})
@@ -109,6 +127,27 @@ export default {
 				if (key === 'original_language') return 'original_language'
 				if (key === 'vote_average') return 'vote_average'
 			}
+		},
+		createPosterUrl(poster) {
+			const url = this.images.imageBaseUrl + this.images.poster_sizes[3] + poster
+			return url
+		},
+		returnStarsArray(vote) {
+			const totalStars = 5
+			let stars = []
+
+			for (let i = 0; i < vote; i++) {
+				stars.push(this.starIcons.full)
+				//stars[i] = this.starIcons.full
+			}
+
+			// for (let i = (stars.length); i < totalStars; i++) {
+			// 	stars[i] = this.starIcons.empty
+			// }
+
+			stars.fill(this.starIcons.empty, vote, totalStars - 1)
+			console.log(stars.length)
+			return stars
 		}
 	},
 	computed: {
