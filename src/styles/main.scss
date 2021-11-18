@@ -1,0 +1,88 @@
+@import 'variables.scss';
+@import '~font-awesome/css/font-awesome.css';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-color-secondary;
+    padding: $spacing * 3;
+    min-height: 100px;
+
+    h1 {
+        color: red;
+        font-size: 25px;
+        margin-bottom: 0;
+    }
+
+    .input-group {
+        width: 300px;
+    }
+}
+
+.main-container {
+    background-color: $bg-color-primary;
+    padding: ($spacing * 5) 0;
+    min-height: calc(100vh - 100px);
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+
+    .card {
+        flex-basis: 300px;
+        height: 450px;
+        max-height: 450px;
+        border: 1px solid whitesmoke;
+    
+        .poster {
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        .card-text {
+            display: none;
+            color: white;
+
+            .flag {
+                max-width: 20%;
+                text-align: center;
+                margin-bottom: $spacing;
+            }
+
+            .vote {
+                span {
+                    margin-right: $spacing;
+                }
+
+                .fa-star,
+                .fa-star-o {
+                    color: $color-yellow;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: $bg-color-secondary;
+            padding: $spacing * 2.5;
+            overflow: hidden;
+
+            .poster {
+                display: none;
+            }
+
+            .card-text {
+                display: block;
+            }
+        }
+    }
+}
