@@ -1,7 +1,11 @@
 <template>
 	<div id="app">
-		<Header @startSearch="setSearchQuery"></Header>
-		<Main :apiData="this.apiData" :genresId="this.genres"></Main>
+		<Header :genres="this.genres"
+		@startSearch="setSearchQuery"
+		@filterMovieMade="startMovieFilter"
+        @filterTvMade="startTvFilter">
+		</Header>
+		<Main :apiData="this.apiData" :genresId="this.genres" :filterValues="this.filterValues"></Main>
 	</div>
 </template>
 
@@ -33,7 +37,11 @@ export default {
 				movie: [],
 				tv: []
 			},
-			searchedQuery: ''
+			searchedQuery: '',
+			filterValues: {
+                movie: '',
+                tv: ''
+            }
 		}
 	},
 	methods: {
@@ -69,7 +77,13 @@ export default {
 		setSearchQuery(searchQuery) {
             this.searchedQuery = searchQuery
 			this.fetchMovieTvData()
-        }
+        },
+		startMovieFilter(filterValue) {
+            this.filterValues.movie = filterValue
+        },
+        startTvFilter(filterValue) {
+            this.filterValues.tv = filterValue
+        },
 	},
 	mounted() {
 		this.fetchGenresData()

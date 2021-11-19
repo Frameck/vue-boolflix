@@ -1,5 +1,5 @@
 <template>
-    <div class="card" @mouseover="fetchMoreData">
+    <div class="card" @mouseover="fetchMoreData" v-if="filterValues[type] === '' || genresList.includes(filterValues[type])">
         <!-- poster -->
         <img :src="posterPath" :alt="`Poster: ${title}`" class="poster">
         <!-- card text che compare all'hover -->
@@ -26,7 +26,7 @@
             <!-- generi -->
             <div class="genres">
                 <span><strong>Generi</strong>: </span>
-                <span>{{ genresList }}</span>
+                <span>{{ genresList.join(', ') }}</span>
             </div>
             <!-- trama -->
             <p v-if="overview !== ''" class="overview"><strong>Overview</strong>: {{ overview }}</p>
@@ -39,7 +39,7 @@ import axios from 'axios'
 
 export default {
     name: 'Card',
-    props: { data: Object, genresId: Array },
+    props: { data: Object, genresId: Array, filterValues: Object, type: String },
     data() {
         return {
             flagCodes: {
@@ -108,7 +108,7 @@ export default {
                     }
                 })
             })
-            return genreThisFilmTv.join(', ')
+            return genreThisFilmTv
         },
         overview() {
             return this.data.overview || ''

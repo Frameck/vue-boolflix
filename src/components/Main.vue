@@ -6,13 +6,17 @@
             :key="`movie_${i}`"
             :data="movie"
             :genresId="genresId.movie"
-            ></Card>
+            :filterValues="filterValues"
+            :type="'movie'">
+            </Card>
             <!-- card for tv shows -->
             <Card v-for="tvShow,k in apiData['tv']"
             :key="`tvShow_${k}`"
             :data="tvShow"
             :genresId="genresId.tv"
-            ></Card>
+            :filterValues="filterValues"
+            :type="'tv'">
+            </Card>
         </div>
     </div>
 </template>
@@ -23,7 +27,20 @@ import Card from './Card.vue'
 export default {
     name: 'Main',
     components: { Card },
-    props: { apiData: Object, genresId: Object }
+    props: { apiData: Object, genresId: Object, filterValues: Object },
+    // data() {
+    //     return {
+    //         filterValues: {
+    //             movie: '',
+    //             tv: ''
+    //         }
+    //     }
+    // },
+    // methods: {
+    //     startFilter(type, filterValue) {
+    //         this.filterValues[type] = filterValue
+    //     }
+    // }
 }
 </script>
 
