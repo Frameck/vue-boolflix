@@ -1,7 +1,7 @@
 <template>
 	<div id="app">
 		<Header @startSearch="setSearchQuery"></Header>
-		<Main :apiData="this.apiData"></Main>
+		<Main :apiData="this.apiData" :genresId="this.genres"></Main>
 	</div>
 </template>
 
@@ -12,7 +12,7 @@ import Main from './components/Main.vue'
 
 export default {
 	name: 'App',
-	components: { Main, Header },
+	components: { Header, Main },
 	data() {
 		return {
 			apiKey: '0100ff849241e864745d64742edcb728',
@@ -20,6 +20,14 @@ export default {
 			apiEndpoints: {
 				movie: '/search/movie',
 				tv: '/search/tv'
+			},
+			genreEndpoints: {
+				movie: '/genre/movie/list',
+				tv: '/genre/tv/list'
+			},
+			genres: {
+				movie: [],
+				tv: []
 			},
 			apiData: {
 				movie: [],
@@ -29,7 +37,7 @@ export default {
 		}
 	},
 	methods: {
-		apiCall() {
+		fetchMovieTvData() {
 			for (const key in this.apiEndpoints) {
 				if (Object.hasOwnProperty.call(this.apiEndpoints, key)) {
 					const endpoint = this.apiEndpoints[key]
@@ -44,10 +52,27 @@ export default {
 				}
 			}
 		},
+		fetchGenresData() {
+			for (const key in this.genreEndpoints) {
+				if (Object.hasOwnProperty.call(this.genreEndpoints, key)) {
+					const endpoint = this.genreEndpoints[key]
+					axios.get(this.apiBaseUrl + endpoint, {
+						params: {
+							api_key: this.apiKey
+						}
+					}).then(res => {
+						this.genres[key] = res.data.genres
+					})
+				}
+			}
+		},
 		setSearchQuery(searchQuery) {
             this.searchedQuery = searchQuery
-			this.apiCall()
+			this.fetchMovieTvData()
         }
+	},
+	mounted() {
+		this.fetchGenresData()
 	}
 }
 </script>

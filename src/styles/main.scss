@@ -43,6 +43,7 @@
         height: 450px;
         max-height: 450px;
         border: 1px solid whitesmoke;
+        position: relative;
     
         .poster {
             min-width: 100%;
@@ -50,8 +51,16 @@
         }
 
         .card-text {
-            display: none;
+            width: 100%;
+            height: 100%;
             color: white;
+            background-color: $bg-color-secondary;
+            opacity: 0;
+            padding: $spacing * 2.5;
+
+            & > * {
+                margin-bottom: $spacing / 2;
+            }
 
             .flag {
                 max-width: 20%;
@@ -69,19 +78,27 @@
                     color: $color-yellow;
                 }
             }
+
+            .cast,
+            .genre {
+                ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+            }
         }
 
         &:hover {
-            background-color: $bg-color-secondary;
-            padding: $spacing * 2.5;
             overflow: hidden;
 
-            .poster {
-                display: none;
-            }
-
             .card-text {
-                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                opacity: 1;
+                transition: opacity .2s ease-in-out .2s;
             }
         }
     }

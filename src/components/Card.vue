@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" @mouseover="fetchMoreData">
         <!-- poster -->
         <img :src="posterPath" :alt="`Poster: ${title}`" class="poster">
         <!-- card text che compare all'hover -->
@@ -13,8 +13,20 @@
             <!-- voto -->
             <div class="vote">
                 <span><strong>Voto</strong>: {{ vote }}/5</span>
-                <i class="fa fa-star" aria-hidden="true" v-for="star in vote" :key="star"></i>
-                <i class="fa fa-star-o" aria-hidden="true" v-for="emptyStar in (5 - vote)" :key="emptyStar"></i>
+                <i class="fa" aria-hidden="true" v-for="i in 5" :key="`voteStar${i}`"
+                :class="(i <= vote) ? 'fa-star' : 'fa-star-o'"></i>
+            </div>
+            <!-- cast -->
+            <div class="cast" v-if="actorsList !== ''">
+                <ul>
+                    <span><strong>Cast</strong>:</span>
+                    <li v-for="actor,i in actorsList" :key="`actor_${i}`">{{ actor.original_name }}</li>
+                </ul>
+            </div>
+            <!-- generi -->
+            <div class="genres">
+                <span><strong>Generi</strong>: </span>
+                <span>{{ genresList }}</span>
             </div>
             <!-- trama -->
             <p v-if="overview !== ''" class="overview"><strong>Overview</strong>: {{ overview }}</p>
@@ -23,9 +35,11 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name: 'Card',
-    props: { data: Object },
+    props: { data: Object, genresId: Array },
     data() {
         return {
             flagCodes: {
@@ -44,6 +58,13 @@ export default {
 				imageBaseUrl: 'https://image.tmdb.org/t/p/',
 				poster_sizes: ['w92', 'w154', 'w185', 'w342', 'w500', 'w780', 'original'],
 			},
+            apiKey: '0100ff849241e864745d64742edcb728',
+            apiBaseUrl: 'https://api.themoviedb.org/3',
+            apiEndpoints: {
+                movieCast: '/movie/',
+                tvCast: '/tv/'
+            },
+            cast: []
         }
     },
     computed: {
@@ -75,8 +96,38 @@ export default {
             let vote = this.data.vote_average === 0 ? 0 : Math.ceil(this.data.vote_average / 2)
             return vote
         },
+        actorsList() {
+            return this.cast || ''
+        },
+        genresList() {
+            let genreThisFilmTv = []
+            this.data.genre_ids.forEach(genre => {
+                this.genresId.forEach(obj => {
+                    if (obj.id === genre) {
+                        genreThisFilmTv.push(obj.name)
+                    }
+                })
+            })
+            return genreThisFilmTv.join(', ')
+        },
         overview() {
             return this.data.overview || ''
+        }
+    },
+    methods: {
+        fetchMoreData() {
+            if (this.cast.length !== 0) return
+            let endpoint = this.apiEndpoints.movieCast
+            if (this.data.name) {
+                endpoint = this.apiEndpoints.tvCast
+            }
+            axios.get(this.apiBaseUrl + endpoint + this.data.id + '/credits', {
+                params: {
+                    api_key: this.apiKey
+                }
+            }).then(res => {
+                this.cast = res.data.cast.slice(0, 5)
+            })
         }
     }
 }

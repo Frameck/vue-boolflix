@@ -5,11 +5,13 @@
             <Card v-for="movie,i in apiData['movie']"
             :key="`movie_${i}`"
             :data="movie"
+            :genresId="genresId.movie"
             ></Card>
             <!-- card for tv shows -->
             <Card v-for="tvShow,k in apiData['tv']"
             :key="`tvShow_${k}`"
             :data="tvShow"
+            :genresId="genresId.tv"
             ></Card>
         </div>
     </div>
@@ -21,7 +23,7 @@ import Card from './Card.vue'
 export default {
     name: 'Main',
     components: { Card },
-    props: { apiData: Object }
+    props: { apiData: Object, genresId: Object }
 }
 </script>
 
