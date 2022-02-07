@@ -58,7 +58,7 @@ export default {
 				imageBaseUrl: 'https://image.tmdb.org/t/p/',
 				poster_sizes: ['w92', 'w154', 'w185', 'w342', 'w500', 'w780', 'original'],
 			},
-            apiKey: '0100ff849241e864745d64742edcb728',
+            apiKey: process.env.API_KEY,
             apiBaseUrl: 'https://api.themoviedb.org/3',
             apiEndpoints: {
                 movieCast: '/movie/',
