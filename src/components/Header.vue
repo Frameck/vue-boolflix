@@ -38,6 +38,14 @@ export default {
         startSearch() {
             this.$emit('startSearch', this.searchQuery)
         },
+        clearFilters() {
+            let filterValue = ''
+            this.filterValues.movie = filterValue
+            this.$emit(`filterMovieMade`, this.filterValues.movie)
+
+            this.filterValues.tv = filterValue
+            this.$emit(`filterTvMade`, this.filterValues.tv)
+        },
         startMovieFilter(filterValue) {
             this.filterValues.movie = filterValue
             this.$emit(`filterMovieMade`, this.filterValues.movie)

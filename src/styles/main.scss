@@ -37,12 +37,16 @@
         #filterMovie {
             margin-right: $spacing * 3;
         }
+
+        .btn-danger {
+            margin-left: $spacing * 3;
+        }
     }
 }
 
 .main-container {
     background-color: $bg-color-primary;
-    padding: ($spacing * 5) 0;
+    padding: ($spacing * 5) $spacing;
     min-height: calc(100vh - 100px);
 }
 
@@ -50,7 +54,8 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: $spacing * 3;
+    row-gap: $spacing * 3;
+    column-gap: $spacing * 5;
 
     .card {
         flex-basis: 300px;
